@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기술지도사 2차시험 정보처리 기출문제</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background: #1a237e;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        .header p { font-size: 0.9rem; opacity: 0.8; }
+
+        .filter-bar {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        .filter-bar label { font-weight: bold; font-size: 0.9rem; }
+        .filter-bar select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+        }
+        .filter-bar select:focus { border-color: #1a237e; outline: none; }
+        .filter-bar button {
+            padding: 8px 24px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .filter-bar button:hover { background: #283593; }
+
+        .result-info {
+            padding: 10px 30px;
+            font-size: 0.85rem;
+            color: #666;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-collapse-all {
+            padding: 6px 16px;
+            border: 2px solid #757575;
+            background: white;
+            color: #757575;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-collapse-all:hover { background: #757575; color: white; }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+
+        .subject-group {
+            margin-bottom: 30px;
+        }
+        .subject-group-header {
+            background: #283593;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            padding: 0;
+        }
+        .question-card:last-child { border-radius: 0 0 8px 8px; }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .question-header:hover { background: #f0f0f0; }
+        .question-title {
+            font-weight: bold;
+            font-size: 1rem;
+            color: #1a237e;
+        }
+        .question-badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .badge-year { background: #e8eaf6; color: #1a237e; }
+        .badge-subject { background: #e0f2f1; color: #00695c; }
+
+        .question-images {
+            display: none;
+            padding: 15px 20px;
+            background: #fefefe;
+        }
+        .question-images.open { display: block; }
+        .question-images img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .question-img-wrapper {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .question-img-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: none;
+            border-radius: 0;
+            margin-bottom: 0;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            cursor: text;
+        }
+        .question-text::selection {
+            background: #bbdefb;
+        }
+
+        .solution-section {
+            display: none;
+            padding: 0 20px 15px;
+            background: #fefefe;
+        }
+        .solution-section.open { display: block; }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            padding: 10px 20px;
+        }
+        .btn-solution {
+            padding: 6px 16px;
+            border: 2px solid #ff6f00;
+            background: white;
+            color: #ff6f00;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-solution:hover { background: #ff6f00; color: white; }
+        .btn-solution.active { background: #ff6f00; color: white; }
+
+        .btn-generate {
+            padding: 6px 16px;
+            border: 2px solid #2e7d32;
+            background: white;
+            color: #2e7d32;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-generate:hover { background: #2e7d32; color: white; }
+
+        .btn-images {
+            padding: 6px 16px;
+            border: 2px solid #1565c0;
+            background: white;
+            color: #1565c0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-images:hover { background: #1565c0; color: white; }
+        .btn-images.active { background: #1565c0; color: white; }
+
+        .solution-content {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+        }
+        .solution-content h2 { font-size: 1.1rem; margin-bottom: 10px; color: #e65100; }
+        .solution-content h3 { font-size: 1rem; margin: 8px 0; color: #f57c00; }
+
+        .solution-empty {
+            color: #999;
+            font-style: italic;
+            padding: 10px;
+        }
+
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .no-results { text-align: center; padding: 60px; color: #999; font-size: 1.1rem; }
+
+        .expand-arrow {
+            transition: transform 0.2s;
+            font-size: 1.2rem;
+            color: #999;
+        }
+        .expand-arrow.rotated { transform: rotate(90deg); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>기술지도사 2차시험 정보처리 기출문제</h1>
+        <p>2013 ~ 2024년 (2023년 제외)</p>
+    </div>
+
+    <div class="filter-bar">
+        <label for="yearSelect">연도:</label>
+        <select id="yearSelect">
+            <option value="">전체</option>
+            {% for y in years %}
+            <option value="{{ y }}">{{ y }}년</option>
+            {% endfor %}
+        </select>
+
+        <label for="subjectSelect">시험과목:</label>
+        <select id="subjectSelect">
+            <option value="">전체</option>
+            {% for s in subjects %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <button onclick="search()">검색</button>
+    </div>
+
+    <div class="result-info" id="resultInfo" style="display:none;">
+        <span id="resultText"></span>
+        <span>
+            <button class="btn-collapse-all" onclick="expandAll()">전체 펼치기</button>
+            <button class="btn-collapse-all" onclick="collapseAll()">전체 접기</button>
+            <button class="btn-collapse-all" onclick="expandAllSolutions()">풀이 전체 펼치기</button>
+            <button class="btn-collapse-all" onclick="collapseAllSolutions()">풀이 전체 접기</button>
+        </span>
+    </div>
+
+    <div class="container" id="results">
+        <div class="no-results">연도와 시험과목을 선택하고 검색 버튼을 누르세요.</div>
+    </div>
+
+    <script>
+    function search() {
+        const year = document.getElementById('yearSelect').value;
+        const subject = document.getElementById('subjectSelect').value;
+
+        let url = '/api/questions?';
+        if (year) url += 'year=' + year + '&';
+        if (subject) url += 'subject=' + encodeURIComponent(subject);
+
+        fetch(url)
+            .then(r => r.json())
+            .then(data => renderResults(data, year, subject));
+    }
+
+    function renderResults(data, year, subject) {
+        const container = document.getElementById('results');
+        const info = document.getElementById('resultInfo');
+
+        if (data.length === 0) {
+            container.innerHTML = '<div class="no-results">검색 결과가 없습니다.</div>';
+            info.style.display = 'none';
+            return;
+        }
+
+        info.style.display = 'flex';
+        document.getElementById('resultText').textContent = `검색 결과: ${data.length}개 문제`;
+
+        // Group by year + subject
+        const groups = {};
+        data.forEach(q => {
+            const key = `${q.year}_${q.subject_order}_${q.subject_name}`;
+            if (!groups[key]) {
+                groups[key] = {
+                    year: q.year,
+                    session_num: q.session_num,
+                    subject_order: q.subject_order,
+                    subject_name: q.subject_name,
+                    questions: [],
+                    image_paths: q.image_paths
+                };
+            }
+            groups[key].questions.push(q);
+        });
+
+        let html = '';
+        Object.values(groups).forEach(group => {
+            html += `<div class="subject-group">`;
+            html += `<div class="subject-group-header">
+                ${group.year}년도 제${group.session_num}회 ${group.subject_order}교시 - ${group.subject_name}
+            </div>`;
+
+            group.questions.forEach(q => {
+                const imgId = `img_${q.id}`;
+                const solId = `sol_${q.id}`;
+                html += `
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleImages('${imgId}', this)">
+                        <span class="question-title">문제 ${q.question_num}</span>
+                        <span class="expand-arrow rotated">&#9654;</span>
+                    </div>
+                    <div class="question-images open" id="${imgId}">
+                        ${renderQuestionContent(q)}
+                        <div class="btn-row">
+                            <button class="btn-solution" onclick="toggleSolution('${solId}', this, event)">
+                                풀이 보기
+                            </button>
+                        </div>
+                        <div class="solution-section" id="${solId}">
+                            ${q.solution
+                                ? `<div class="solution-content">${formatSolution(q.solution)}</div>`
+                                : `<div class="solution-empty">풀이가 없습니다.</div>`
+                            }
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            html += `</div>`;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function renderQuestionContent(q) {
+        const hasText = q.question_text && q.question_text.trim().length > 0;
+        const hasQuestionImages = q.question_image_paths && q.question_image_paths.length > 0;
+
+        if (hasText || hasQuestionImages) {
+            // 개별 문제 데이터가 있는 경우: 텍스트 + 개별 이미지만 표시
+            let html = '';
+            if (hasText) {
+                // [그림 참조] 위치에 맞춰 텍스트와 이미지를 인터리브
+                const textParts = q.question_text.split('[그림 참조]');
+                let imgIdx = 0;
+                textParts.forEach((part, i) => {
+                    if (part.trim()) {
+                        html += `<div class="question-text">${escapeHtml(part.trim())}</div>`;
+                    }
+                    // [그림 참조] 위치에 이미지 삽입
+                    if (i < textParts.length - 1 && hasQuestionImages && imgIdx < q.question_image_paths.length) {
+                        html += `<div class="question-img-wrapper"><img src="/static/${q.question_image_paths[imgIdx]}" alt="문제 그림" loading="lazy"></div>`;
+                        imgIdx++;
+                    }
+                });
+                // 남은 이미지가 있으면 끝에 추가
+                while (imgIdx < (q.question_image_paths ? q.question_image_paths.length : 0)) {
+                    html += `<div class="question-img-wrapper"><img src="/static/${q.question_image_paths[imgIdx]}" alt="문제 그림" loading="lazy"></div>`;
+                    imgIdx++;
+                }
+            } else {
+                // 텍스트 없이 이미지만 있는 경우
+                q.question_image_paths.forEach(p => {
+                    html += `<div class="question-img-wrapper"><img src="/static/${p}" alt="문제 그림" loading="lazy"></div>`;
+                });
+            }
+            return html;
+        } else {
+            // 개별 데이터 없음: 기존 방식 (과목 전체 이미지)
+            return q.image_paths.map(p => `<img src="/static/${p}" alt="문제 이미지" loading="lazy">`).join('');
+        }
+    }
+
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function toggleImages(imgId, headerEl) {
+        const el = document.getElementById(imgId);
+        const arrow = headerEl.querySelector('.expand-arrow');
+        el.classList.toggle('open');
+        arrow.classList.toggle('rotated');
+    }
+
+    function collapseAll() {
+        document.querySelectorAll('.question-images.open').forEach(el => {
+            el.classList.remove('open');
+        });
+        document.querySelectorAll('.expand-arrow.rotated').forEach(el => {
+            el.classList.remove('rotated');
+        });
+    }
+
+    function expandAll() {
+        document.querySelectorAll('.question-images:not(.open)').forEach(el => {
+            el.classList.add('open');
+        });
+        document.querySelectorAll('.expand-arrow:not(.rotated)').forEach(el => {
+            el.classList.add('rotated');
+        });
+    }
+
+    function expandAllSolutions() {
+        document.querySelectorAll('.solution-section:not(.open)').forEach(el => {
+            el.classList.add('open');
+        });
+        document.querySelectorAll('.btn-solution').forEach(btn => {
+            btn.classList.add('active');
+            btn.textContent = '풀이 닫기';
+        });
+    }
+
+    function collapseAllSolutions() {
+        document.querySelectorAll('.solution-section.open').forEach(el => {
+            el.classList.remove('open');
+        });
+        document.querySelectorAll('.btn-solution').forEach(btn => {
+            btn.classList.remove('active');
+            btn.textContent = '풀이 보기';
+        });
+    }
+
+    function toggleSolution(solId, btn, event) {
+        event.stopPropagation();
+        const el = document.getElementById(solId);
+        el.classList.toggle('open');
+        btn.classList.toggle('active');
+        btn.textContent = el.classList.contains('open') ? '풀이 닫기' : '풀이 보기';
+    }
+
+    function generateSolution(qId, solId, event) {
+        event.stopPropagation();
+        const solEl = document.getElementById(solId);
+
+        if (!confirm('AI 풀이를 생성하시겠습니까?')) return;
+
+        solEl.innerHTML = '<div class="solution-content">풀이 생성 중...</div>';
+        solEl.classList.add('open');
+
+        fetch('/api/generate_solution', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({id: qId})
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.solution) {
+                solEl.innerHTML = `<div class="solution-content">${formatSolution(data.solution)}</div>`;
+            } else {
+                solEl.innerHTML = '<div class="solution-empty">풀이 생성에 실패했습니다.</div>';
+            }
+        })
+        .catch(err => {
+            solEl.innerHTML = '<div class="solution-empty">오류가 발생했습니다: ' + err + '</div>';
+        });
+    }
+
+    function formatSolution(text) {
+        // Simple markdown-like formatting
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+            .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/^- (.+)$/gm, '&bull; $1')
+            .replace(/\n/g, '<br>');
+    }
+    </script>
+</body>
+</html>
