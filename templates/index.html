@@ -73,6 +73,7 @@
             transition: all 0.2s;
         }
         .btn-collapse-all:hover { background: #757575; color: white; }
+        .btn-collapse-all.sort-active { background: #1a237e; color: white; border-color: #1a237e; }
 
         .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
 
@@ -251,12 +252,212 @@
             color: #999;
         }
         .expand-arrow.rotated { transform: rotate(90deg); }
+
+        .autocomplete-wrap { position: relative; display: inline-block; }
+        .autocomplete-wrap input { width: 260px; }
+        .ac-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #1a237e;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            max-height: 360px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .ac-dropdown.open { display: block; }
+        .ac-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .ac-item:last-child { border-bottom: none; }
+        .ac-item:hover, .ac-item.active { background: #e8eaf6; }
+        .ac-label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        .ac-snippet {
+            font-size: 0.78rem;
+            color: #666;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ac-snippet mark {
+            background: #fff176;
+            color: #333;
+            padding: 0 1px;
+            border-radius: 2px;
+        }
+        .ac-count {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            color: #999;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* 키워드 모달 */
+        .btn-keyword-top {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 7px 16px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-keyword-top:hover { background: rgba(255,255,255,0.3); border-color: white; }
+        .header { position: relative; }
+
+        .kw-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 60px;
+        }
+        .kw-overlay.open { display: flex; }
+        .kw-modal {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+        }
+        .kw-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 2px solid #1a237e;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 12px 12px 0 0;
+        }
+        .kw-modal-header h2 { font-size: 1.1rem; color: #1a237e; }
+        .kw-close {
+            width: 32px; height: 32px;
+            border: none; background: #eee;
+            border-radius: 50%; cursor: pointer;
+            font-size: 1.2rem; color: #666;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .kw-close:hover { background: #d32f2f; color: white; }
+        .kw-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+        }
+        .kw-col {
+            border-right: 1px solid #eee;
+            padding: 0;
+        }
+        .kw-col:last-child { border-right: none; }
+        .kw-col-header {
+            padding: 10px 16px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: white;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+        .kw-col:nth-child(1) .kw-col-header { background: #1565c0; }
+        .kw-col:nth-child(2) .kw-col-header { background: #2e7d32; }
+        .kw-col:nth-child(3) .kw-col-header { background: #e65100; }
+        .kw-row {
+            display: flex;
+            align-items: center;
+            padding: 5px 16px;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .kw-row:hover { background: #e8eaf6; }
+        .kw-rank {
+            width: 24px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #999;
+            flex-shrink: 0;
+        }
+        .kw-rank.top3 { color: #d32f2f; }
+        .kw-word {
+            flex: 1;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .kw-bar-wrap {
+            width: 90px;
+            height: 16px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0 8px;
+            flex-shrink: 0;
+        }
+        .kw-bar {
+            display: block;
+            height: 100%;
+            border-radius: 8px;
+        }
+        .kw-bar.c1 { background: linear-gradient(90deg, #90caf9, #1565c0); background-size: 90px 16px; background-repeat: no-repeat; }
+        .kw-bar.c2 { background: linear-gradient(90deg, #a5d6a7, #2e7d32); background-size: 90px 16px; background-repeat: no-repeat; }
+        .kw-bar.c3 { background: linear-gradient(90deg, #ffccbc, #e65100); background-size: 90px 16px; background-repeat: no-repeat; }
+        .kw-cnt {
+            font-size: 0.75rem;
+            color: #999;
+            width: 28px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .kw-loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>기술지도사 2차시험 정보처리 기출문제</h1>
-        <p>2013 ~ 2024년 (2023년 제외)</p>
+        <button class="btn-keyword-top" onclick="openKeywordModal()">TOP 30 키워드</button>
+    </div>
+
+    <div class="kw-overlay" id="kwOverlay" onclick="if(event.target===this)closeKeywordModal()">
+        <div class="kw-modal">
+            <div class="kw-modal-header">
+                <h2>교시별 출제 빈도 TOP 30 키워드</h2>
+                <button class="kw-close" onclick="closeKeywordModal()">&times;</button>
+            </div>
+            <div class="kw-body" id="kwBody">
+                <div class="kw-loading">분석 중...</div>
+            </div>
+        </div>
     </div>
 
     <div class="filter-bar">
@@ -276,12 +477,21 @@
             {% endfor %}
         </select>
 
+        <label for="searchText">키워드:</label>
+        <div class="autocomplete-wrap">
+            <input type="text" id="searchText" placeholder="문제 내용 검색" autocomplete="off"
+                   style="padding:8px 12px; border:2px solid #ddd; border-radius:6px; font-size:0.95rem; width:260px;">
+            <div class="ac-dropdown" id="acDropdown"></div>
+        </div>
+
         <button onclick="search()">검색</button>
     </div>
 
     <div class="result-info" id="resultInfo" style="display:none;">
         <span id="resultText"></span>
         <span>
+            <button class="btn-collapse-all" onclick="sortResults('asc')" id="btnSortAsc" title="연도 오름차순">연도 ▲</button>
+            <button class="btn-collapse-all" onclick="sortResults('desc')" id="btnSortDesc" title="연도 내림차순">연도 ▼</button>
             <button class="btn-collapse-all" onclick="expandAll()">전체 펼치기</button>
             <button class="btn-collapse-all" onclick="collapseAll()">전체 접기</button>
             <button class="btn-collapse-all" onclick="expandAllSolutions()">풀이 전체 펼치기</button>
@@ -290,24 +500,195 @@
     </div>
 
     <div class="container" id="results">
-        <div class="no-results">연도와 시험과목을 선택하고 검색 버튼을 누르세요.</div>
+        <div class="no-results">연도, 시험과목을 선택하거나 키워드를 입력하고 검색 버튼을 누르세요.</div>
     </div>
 
     <script>
+    // === 검색 결과 데이터 + 정렬 ===
+    let lastResults = [];
+    let currentSort = 'desc';
+
+    function sortResults(order) {
+        if (lastResults.length === 0) return;
+        currentSort = order;
+        const sorted = [...lastResults].sort((a, b) =>
+            order === 'asc' ? a.year - b.year || a.subject_order - b.subject_order || a.question_num - b.question_num
+                            : b.year - a.year || a.subject_order - b.subject_order || a.question_num - b.question_num
+        );
+        renderResults(sorted, true);
+        document.getElementById('btnSortAsc').classList.toggle('sort-active', order === 'asc');
+        document.getElementById('btnSortDesc').classList.toggle('sort-active', order === 'desc');
+    }
+
+    // === TOP 30 키워드 모달 ===
+    let kwCache = null;
+
+    function openKeywordModal() {
+        document.getElementById('kwOverlay').classList.add('open');
+        if (kwCache) {
+            renderKeywords(kwCache);
+        } else {
+            document.getElementById('kwBody').innerHTML = '<div class="kw-loading">분석 중...</div>';
+            fetch('/api/top_keywords')
+                .then(r => r.json())
+                .then(data => { kwCache = data; renderKeywords(data); });
+        }
+    }
+
+    function closeKeywordModal() {
+        document.getElementById('kwOverlay').classList.remove('open');
+    }
+
+    function renderKeywords(data) {
+        const labels = {1: '1교시 - 정보통신개론', 2: '2교시 - 시스템응용', 3: '3교시 - 소프트웨어공학'};
+        let html = '';
+        [1, 2, 3].forEach(s => {
+            const items = data[s] || [];
+            const maxCnt = items.length > 0 ? items[0].count : 1;
+            html += `<div class="kw-col">`;
+            html += `<div class="kw-col-header">${labels[s]}</div>`;
+            items.forEach((item, i) => {
+                const pct = Math.round((item.count / maxCnt) * 100);
+                const rankCls = i < 3 ? 'kw-rank top3' : 'kw-rank';
+                html += `<div class="kw-row" onclick="kwClick('${escapeHtml(item.keyword)}')">
+                    <span class="${rankCls}">${i+1}</span>
+                    <span class="kw-word">${escapeHtml(item.keyword)}</span>
+                    <span class="kw-bar-wrap"><span class="kw-bar c${s}" style="width:${pct}%"></span></span>
+                    <span class="kw-cnt">${item.count}</span>
+                </div>`;
+            });
+            html += `</div>`;
+        });
+        document.getElementById('kwBody').innerHTML = html;
+    }
+
+    function kwClick(keyword) {
+        closeKeywordModal();
+        document.getElementById('searchText').value = keyword;
+        search();
+    }
+
+    // === 자동완성 ===
+    const acInput = document.getElementById('searchText');
+    const acDrop = document.getElementById('acDropdown');
+    let acTimer = null;
+    let acIndex = -1;
+    let acItems = [];
+
+    acInput.addEventListener('input', function() {
+        clearTimeout(acTimer);
+        const q = this.value.trim();
+        if (q.length < 1) { acClose(); return; }
+        acTimer = setTimeout(() => acFetch(q), 200);
+    });
+
+    acInput.addEventListener('keydown', function(e) {
+        if (!acDrop.classList.contains('open')) {
+            if (e.key === 'Enter') search();
+            return;
+        }
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            acIndex = Math.min(acIndex + 1, acItems.length - 1);
+            acHighlight();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            acIndex = Math.max(acIndex - 1, -1);
+            acHighlight();
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (acIndex >= 0 && acItems[acIndex]) {
+                acSelect(acItems[acIndex]);
+            } else {
+                acClose();
+                search();
+            }
+        } else if (e.key === 'Escape') {
+            acClose();
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.autocomplete-wrap')) acClose();
+    });
+
+    function acFetch(q) {
+        fetch('/api/autocomplete?q=' + encodeURIComponent(q))
+            .then(r => r.json())
+            .then(data => {
+                acItems = data;
+                acIndex = -1;
+                if (data.length === 0) { acClose(); return; }
+                let html = `<div class="ac-count">${data.length}개 문제 발견</div>`;
+                data.forEach((item, i) => {
+                    const snippet = highlightText(item.snippet, q);
+                    html += `<div class="ac-item" data-idx="${i}" onmouseenter="acIndex=${i};acHighlight()" onclick="acSelect(acItems[${i}])">
+                        <div class="ac-label">${item.label}</div>
+                        <div class="ac-snippet">${snippet}</div>
+                    </div>`;
+                });
+                acDrop.innerHTML = html;
+                acDrop.classList.add('open');
+            });
+    }
+
+    function highlightText(text, keyword) {
+        const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escaped})`, 'gi');
+        return escapeHtml(text).replace(regex, '<mark>$1</mark>');
+    }
+
+    function acHighlight() {
+        acDrop.querySelectorAll('.ac-item').forEach((el, i) => {
+            el.classList.toggle('active', i === acIndex);
+        });
+        const activeEl = acDrop.querySelector('.ac-item.active');
+        if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+    }
+
+    function acSelect(item) {
+        acClose();
+        // 해당 문제 1건만 조회
+        fetch('/api/questions?id=' + item.id)
+            .then(r => r.json())
+            .then(data => {
+                lastResults = data;
+                currentSort = 'desc';
+                renderResults(data);
+                document.getElementById('resultInfo').style.display = 'flex';
+                document.getElementById('btnSortAsc').classList.remove('sort-active');
+                document.getElementById('btnSortDesc').classList.add('sort-active');
+            });
+    }
+
+    function acClose() {
+        acDrop.classList.remove('open');
+        acIndex = -1;
+    }
+
     function search() {
         const year = document.getElementById('yearSelect').value;
         const subject = document.getElementById('subjectSelect').value;
+        const keyword = document.getElementById('searchText').value.trim();
 
         let url = '/api/questions?';
         if (year) url += 'year=' + year + '&';
-        if (subject) url += 'subject=' + encodeURIComponent(subject);
+        if (subject) url += 'subject=' + encodeURIComponent(subject) + '&';
+        if (keyword) url += 'keyword=' + encodeURIComponent(keyword);
 
         fetch(url)
             .then(r => r.json())
-            .then(data => renderResults(data, year, subject));
+            .then(data => {
+                lastResults = data;
+                currentSort = 'desc';
+                renderResults(data);
+                document.getElementById('btnSortAsc').classList.remove('sort-active');
+                document.getElementById('btnSortDesc').classList.add('sort-active');
+            });
     }
 
-    function renderResults(data, year, subject) {
+    function renderResults(data, skipSaveFlag) {
+        if (!skipSaveFlag) lastResults = data;
         const container = document.getElementById('results');
         const info = document.getElementById('resultInfo');
 
