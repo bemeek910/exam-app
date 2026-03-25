@@ -1,0 +1,22 @@
+[
+  {
+    "run_date": "2026-03-25T10:28:34.815771",
+    "reason": "데모 풀이를 Claude 직접 작성 풀이로 교체",
+    "updated_questions": [
+      {
+        "id": 1,
+        "year": 2013,
+        "subject": "정보통신개론",
+        "question_num": 1,
+        "solution_length": 2349
+      },
+      {
+        "id": 54,
+        "year": 2015,
+        "subject": "소프트웨어공학",
+        "question_num": 6,
+        "solution_length": 1211
+      }
+    ]
+  }
+]
